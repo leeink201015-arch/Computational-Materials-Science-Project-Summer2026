@@ -192,7 +192,7 @@ reacting_molecules = {
 # Creating the atomic_species block
 
 involved_elements_informations = {
-    "Fe": {"mass": 55.845, "pseudopotential": "Fe.pbe-spn-rrkjus_psl.1.0.0.UPF"},
+    "Fe": {"mass": 55.845, "pseudopotential": "Fe.pbe-spn-rrkjus_psl.0.2.1.UPF"},
     "C":  {"mass": 12.011, "pseudopotential": "C.pbe-n-kjpaw_psl.1.0.0.UPF"},
     "O":  {"mass": 15.999, "pseudopotential": "O.pbe-n-kjpaw_psl.1.0.0.UPF"},
     "N":  {"mass": 14.007, "pseudopotential": "N.pbe-n-kjpaw_psl.1.0.0.UPF"},
@@ -213,7 +213,7 @@ def write_qespresso_input (structure, molecular_name, output_file):
         file.write("calculation = 'relax'\n")
         file.write("restart_mode = 'from_scratch'\n")
         file.write(f"prefix = 'fe_{molecular_name}'\n")
-        file.write("pseudo_dir = './'\n")
+        file.write("pseudo_dir = '/usr/share/espresso/pseudo/'\n")  # Made a change here, because pseudopotentials are actually installed in /usr/share/espresso/pseudo/
         file.write("outdir = './tmp/'\n")
         file.write("/\n\n")
 
@@ -222,6 +222,7 @@ def write_qespresso_input (structure, molecular_name, output_file):
         file.write("ibrav = 0\n")
         file.write(f"nat = {num_atoms}\n")
         file.write(f"ntyp = {num_species}\n")
+        file.write("nosym = .true.\n")  # Added this line to disable symmetry operations, which is important for surface calculations
         file.write("ecutwfc = 45.0\n")
         file.write("ecutrho = 360.0\n")
         file.write("occupations = 'smearing'\n")
@@ -378,7 +379,7 @@ def write_qespresso_input (structure, molecular_name, output_file, calculation =
         file.write(f"calculation = '{calculation}'\n")
         file.write("restart_mode = 'from_scratch'\n")
         file.write(f"prefix = 'fe_{molecular_name}'\n")
-        file.write("pseudo_dir = './'\n")
+        file.write("pseudo_dir = '/usr/share/espresso/pseudo/'\n") # Made a change here, because pseudopotentials are actually installed in /usr/share/espresso/pseudo/
         file.write("outdir = './tmp/'\n")
         file.write("/\n\n")
 
@@ -387,6 +388,7 @@ def write_qespresso_input (structure, molecular_name, output_file, calculation =
         file.write("ibrav = 0\n")
         file.write(f"nat = {num_atoms}\n")
         file.write(f"ntyp = {num_species}\n")
+        file.write("nosym = .true.\n")  # Added this line to disable symmetry operations, which is important for surface calculations
         file.write("ecutwfc = 45.0\n")
         file.write("ecutrho = 360.0\n")
         file.write("occupations = 'smearing'\n")
@@ -460,9 +462,17 @@ os.makedirs(clean_surface_folder, exist_ok=True)
 
 clean_surface_relaxation_input_path = os.path.join(clean_surface_folder, "relax.in")
 
+print("Generating clean surface relax.in now...")
+print("Target path:", os.path.abspath(clean_surface_relaxation_input_path))
+
 write_qespresso_input(
-    structure = fe_surface,
-    molecular_name = "clean_fe_surface",
-    output_file = clean_surface_relaxation_input_path,
-    calculation = "relax"
+    structure=fe_surface,
+    molecular_name="clean_fe_surface",
+    output_file=clean_surface_relaxation_input_path,
+    calculation="relax"
 )
+
+print("Finished write_qespresso_input")
+print("File exists:", os.path.exists(clean_surface_relaxation_input_path))
+
+print(f"File saved in {os.getcwd()}")
