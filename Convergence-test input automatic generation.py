@@ -356,6 +356,7 @@ cutoff_tests = [
     (45.0, 360.0), 
     (55.0, 440.0),
     (65.0, 520.0),
+    (75.0, 600.0),
 ]
 
 # Adding for loop to generate input files for convergence tests with different cutoff energies
