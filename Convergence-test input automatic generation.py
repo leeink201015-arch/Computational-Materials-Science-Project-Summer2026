@@ -352,17 +352,28 @@ def write_qespresso_input (structure, molecular_name, output_file, calculation =
 
     print(f"Quantum ESPRESSO input file: {output_file}")
 
-cutoff_tests = [
-    (45.0, 360.0), 
-    (55.0, 440.0),
-    (65.0, 520.0),
-    (75.0, 600.0),
+# cutoff_tests = [
+#     (45.0, 360.0), 
+#     (55.0, 440.0),
+#     (65.0, 520.0),
+#     (75.0, 600.0),
+#     (85.0, 680.0),
+# ]
+
+fixed_ecutwfc_value = 65.0
+
+ecutrho_tests = [
+    600.0,
+    700.0,
+    782.0,
+    850.0,
+    900.0,
 ]
 
 # Adding for loop to generate input files for convergence tests with different cutoff energies
 
-for ecutwfc, ecutrho in cutoff_tests:
-    output_folder = os.path.join("calculations", "convergence_tests", "cutoff",f"ecut_{int(ecutwfc)}_ecutrho_{int(ecutrho)}")
+for ecutrho in ecutrho_tests:
+    output_folder = os.path.join("calculations", "convergence_tests", "cutoff",f"ecut_{int(fixed_ecutwfc_value)}_ecutrho_{int(ecutrho)}")
     os.makedirs(output_folder, exist_ok=True)
     output_file = os.path.join(output_folder, "scf.in")
 
@@ -371,7 +382,7 @@ for ecutwfc, ecutrho in cutoff_tests:
         molecular_name = "clean_fe_surface",
         output_file = output_file,
         calculation = "scf",
-        ecutwfc = ecutwfc,
+        ecutwfc = fixed_ecutwfc_value,
         ecutrho = ecutrho,
         k_grid = (4, 4, 1)
     )
