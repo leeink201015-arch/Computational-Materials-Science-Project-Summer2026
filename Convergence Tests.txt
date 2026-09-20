@@ -1,0 +1,105 @@
+Cutoff convergence test for Fe(100) slab (clean, magnetic)
+
+ecutwfc = 45 Ry
+ecutrho = 360 Ry
+K_POINTS = 4 4 1
+
+Total energy = -2034.57334018 Ry
+Final total magnetization = 19.40 Bohr mag/cell
+SCF convergence achieved in 74 iterations
+
+
+
+ecutwfc = 55 Ry
+ecutrho = 440 Ry
+K_POINTS = 4 4 1
+
+Total energy = -2034.72331901 Ry
+Final total magnetization = 19.46 Bohr mag/cell
+SCF convergence achieved in 89 iterations
+
+
+
+ecutwfc = 65 Ry
+ecutrho = 520 Ry
+K_POINTS = 4 4 1
+
+Total energy = -2034.74174555 Ry
+Final total magnetization = 19.47 Bohr mag/cell
+SCF convergence achieved in 74 iterations
+
+
+
+Analysing cutoff energies,
+    |E₅₅ - E₄₅| = 0.14997883 Ry
+    |E₆₅ - E₅₅| = 0.01842654 Ry,
+energy converged or at least I'm on the right track;
+
+Analysing magnetization,
+    seeing a really stable converging trend here: 19.40 Bohr mag/cell -> 19.46 Bohr mag/cell -> 19.47 Bohr mag/cell
+
+
+
+ecutwfc = 75 Ry
+ecutrho = 600 Ry
+K_POINTS = 4 4 1
+
+Total energy = -2034.76616293 Ry
+Final total magnetization = 19.48 Bohr mag/cell
+SCF convergence has achieved in 78 iterations
+
+ecutwfc = 85 Ry
+ecutrho = 680 Ry
+K_POINTS = 4 4 1
+
+Total energy = -2034.78192935 Ry
+Final total magnetization = 19.48 Bohr mag/cell
+SCF convergence has achieved in 93 iterations
+
+Really annoying cutoff energy still not converging got to change the strategy here
+Initally assumed that ecutrho = 8*ecutwfc, because of the ultrasoft pseudopotential we have, but after checking the pseudopotential metadata, we found out that E_wfc, min ​≈ 64 Ry, and E_rho, min ​≈ 782 Ry
+
+ecutwfc = 65 Ry
+ecutrho = 782 Ry
+K_POINTS = 4 4 1
+
+Total energy = -2034.73847608 Ry
+Final total magnetization = 19.48 Bohr mag/cell
+SCF convergence has achieved in 89 iterations
+
+ecutwfc = 65 Ry
+ecutrho = 850 Ry
+K_POINTS = 4 4 1
+
+Total energy =  -2034.73786182 Ry
+Final total magnetization = 19.48 Bohr mag/cell
+SCF convergence has achieved in 90 iterations
+
+Sep 8th, 2026 0:51:53 YOOO FINALLY GOT THE RESULT I WANT, IMA KEEP ECUTRHO = 782 Ry, IT'S TIME FOR K_POINTS CONVERGENCE!!!
+
+
+
+K_POINTS Convergence Tests
+Sep 12th, 2026 23:27:29 Got my calculations for (4, 4, 1) baseline
+
+K_POINTS = (4, 4, 1)
+
+Total energy = -2034.73847606 Ry
+Total magnetization = 19.48 Bohr mag/cell
+Fermi energy = 7.0179 eV
+
+K_POINTS = (6, 6, 1)
+
+Total energy = -2034.75297717 Ry
+Total magnetization = 19.87 Bohr mag/cell
+Fermi energy = 6.9659 eV
+
+K_POINTS = (8, 8, 1)
+
+Total energy = -2034.75340298 Ry
+Total magnetization = 20.07 Bohr mag/cell
+Fermi energy = 6.9527 eV
+
+Sep 13th, 2026 (Sometime before 6:00:00), finished calculations above
+
+So (8 x 8 x 1) are the converged K_POINTS that I'm gonna use, we are done!
