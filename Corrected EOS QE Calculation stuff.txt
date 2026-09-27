@@ -1,0 +1,28 @@
+Bulk EOS
+scf_a_2.7227.out:!    total energy              =    -254.35920116 Ry
+scf_a_2.7514.out:!    total energy              =    -254.36307555 Ry
+scf_a_2.7800.out:!    total energy              =    -254.36551237 Ry
+scf_a_2.8087.out:!    total energy              =    -254.36671737 Ry
+scf_a_2.8373.out:!    total energy              =    -254.36702532 Ry
+scf_a_2.8660.out:!    total energy              =    -254.36669905 Ry
+scf_a_2.8947.out:!    total energy              =    -254.36550334 Ry
+scf_a_2.9233.out:!    total energy              =    -254.36360571 Ry
+scf_a_2.9520.out:!    total energy              =    -254.36145022 Ry
+scf_a_2.9806.out:!    total energy              =    -254.35905142 Ry
+scf_a_3.0093.out:!    total energy              =    -254.35622886 Ry
+
+scf_a_2.7227.out       total magnetization       =     1.95 Bohr mag/cell
+scf_a_2.7514.out       total magnetization       =     1.96 Bohr mag/cell
+scf_a_2.7800.out       total magnetization       =     1.97 Bohr mag/cell
+scf_a_2.8087.out       total magnetization       =     2.02 Bohr mag/cell
+scf_a_2.8373.out       total magnetization       =     2.17 Bohr mag/cell
+scf_a_2.8660.out       total magnetization       =     2.25 Bohr mag/cell
+scf_a_2.8947.out       total magnetization       =     2.29 Bohr mag/cell
+scf_a_2.9233.out       total magnetization       =     2.39 Bohr mag/cell
+scf_a_2.9520.out       total magnetization       =     2.56 Bohr mag/cell
+scf_a_2.9806.out       total magnetization       =     2.64 Bohr mag/cell
+scf_a_3.0093.out       total magnetization       =     2.68 Bohr mag/cell
+
+
+
+Fit EOS
