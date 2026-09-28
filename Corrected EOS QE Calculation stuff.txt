@@ -1,28 +1,76 @@
-Bulk EOS
-scf_a_2.7227.out:!    total energy              =    -254.35920116 Ry
-scf_a_2.7514.out:!    total energy              =    -254.36307555 Ry
-scf_a_2.7800.out:!    total energy              =    -254.36551237 Ry
-scf_a_2.8087.out:!    total energy              =    -254.36671737 Ry
-scf_a_2.8373.out:!    total energy              =    -254.36702532 Ry
-scf_a_2.8660.out:!    total energy              =    -254.36669905 Ry
-scf_a_2.8947.out:!    total energy              =    -254.36550334 Ry
-scf_a_2.9233.out:!    total energy              =    -254.36360571 Ry
-scf_a_2.9520.out:!    total energy              =    -254.36145022 Ry
-scf_a_2.9806.out:!    total energy              =    -254.35905142 Ry
-scf_a_3.0093.out:!    total energy              =    -254.35622886 Ry
+Bulk Fe EOS Results
 
-scf_a_2.7227.out       total magnetization       =     1.95 Bohr mag/cell
-scf_a_2.7514.out       total magnetization       =     1.96 Bohr mag/cell
-scf_a_2.7800.out       total magnetization       =     1.97 Bohr mag/cell
-scf_a_2.8087.out       total magnetization       =     2.02 Bohr mag/cell
-scf_a_2.8373.out       total magnetization       =     2.17 Bohr mag/cell
-scf_a_2.8660.out       total magnetization       =     2.25 Bohr mag/cell
-scf_a_2.8947.out       total magnetization       =     2.29 Bohr mag/cell
-scf_a_2.9233.out       total magnetization       =     2.39 Bohr mag/cell
-scf_a_2.9520.out       total magnetization       =     2.56 Bohr mag/cell
-scf_a_2.9806.out       total magnetization       =     2.64 Bohr mag/cell
-scf_a_3.0093.out       total magnetization       =     2.68 Bohr mag/cell
+Pseudopotential: Fe.pbe-spn-rrkjus_psl.0.2.1.UPF
+ecutwfc = 65 Ry
+ecutrho = 782 Ry
+Smearing = Marzari-Vanderbilt
+degauss = 0.02 Ry
+Spin-polarized calculation
 
 
+1. Initial Bulk EOS (8x8x8 k-point grid)
 
-Fit EOS
+Lattice constant (Å)    Total energy (Ry)     Magnetization (Bohr mag/cell)
+
+2.7227                  -254.35920116         1.95
+2.7514                  -254.36307555         1.96
+2.7800                  -254.36551237         1.97
+2.8087                  -254.36671737         2.02
+2.8373                  -254.36702532         2.17
+2.8660                  -254.36669905         2.25
+2.8947                  -254.36550334         2.29
+2.9233                  -254.36360571         2.39
+2.9520                  -254.36145022         2.56
+2.9806                  -254.35905142         2.64
+3.0093                  -254.35622886         2.68
+
+Birch-Murnaghan fit:
+a_eq = 2.8331 Å
+B0 = 1175.13 GPa
+
+So the fitted equilibrium lattice constant was reasonable, but the fitted bulk modulus (B0) was suspiciously large. Therefore I ran a Bulk K-Point convergence test.
+
+
+2. Bulk k-point convergence test
+
+k-grid        Total energy (Ry)       Magnetization (Bohr mag/cell)
+
+8x8x8         -254.36702927           2.15
+10x10x10      -254.36850080           2.11
+12x12x12      -254.36811079           2.20
+14x14x14      -254.36800680           2.15
+16x16x16      -254.36796161           2.16
+
+Successive energy differences:
+8 -> 10       ~20.0 meV
+10 -> 12      ~5.3 meV
+12 -> 14      ~1.4 meV
+14 -> 16      ~0.6 meV
+
+The test showed that the 8x8x8 grid was not sufficiently converged for high-precision EOS calculations, when we got to 14x14x14, we're already around the ~1 meV/atom level relative to the next denser test, which is a reasonable accuracy/cost compromise for our calculation
+Selected bulk k-point grid: 14x14x14
+
+
+3. Bulk EOS after k-point convergence (14x14x14)
+
+Lattice constant (Å)    Total energy (Ry)     Magnetization (Bohr mag/cell)
+
+2.7227                  -254.35915402         2.03
+2.7514                  -254.36330318         2.08
+2.7800                  -254.36609110         2.11
+2.8087                  -254.36760789         2.13
+2.8373                  -254.36799697         2.16
+2.8660                  -254.36739906         2.19
+2.8947                  -254.36598595         2.26
+2.9233                  -254.36402456         2.40
+2.9520                  -254.36181677         2.54
+2.9806                  -254.35924971         2.60
+3.0093                  -254.35620467         2.63
+
+Lowest sampled energy:
+a = 2.8373 Å
+E = -254.36799697 Ry
+
+Birch-Murnaghan fit:
+a_eq =
+B0 =

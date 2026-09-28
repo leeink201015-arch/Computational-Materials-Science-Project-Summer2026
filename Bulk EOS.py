@@ -12,10 +12,10 @@ a_initial = 2.866
 scale_factors = np.linspace(0.95, 1.05, 11)  # Created 11 evenly spaced numbers between 0.95 and 1.05, picked 0.95 and 1.05 to cover a range of ±5% around the initial lattice parameter
 ecutwfc = 65.0
 ecutrho = 782.0
-k_grid = (8, 8, 8)
+k_grid = (14, 14, 14) # Changed on Sep 27, after running K-Points convergence test, I found that 8x8x8 was insufficient and produced a bulk modulus with too large of a value. Convergence test showed that 14x14x14 was sufficient so I'll use this for the final EOS calculations
 
 # Create output directory...
-output_dir = os.path.join("calculations", "bulk_eos_final_corrected")  # Ik the calculcation won't be 100% "final corrected" but this name helps me identify the file names for the calculations because I ran QE before that already and got pre off results that are completely wrong so yea
+output_dir = os.path.join("calculations", "bulk_eos_final_corrected_k14")  # Ik the calculcation won't be 100% "final corrected" but this name helps me identify the file names for the calculations because I ran QE before that already and got pre off results that are completely wrong so yea
 os.makedirs(output_dir, exist_ok=True)
 
 def write_qe_bulk_scf(a, filename, ecutwfc, ecutrho, k_grid):
