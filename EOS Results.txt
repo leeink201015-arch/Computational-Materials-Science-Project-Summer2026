@@ -1,0 +1,12 @@
+FINAL BIRCH-MURNAGHAN EOS FIT (14x14x14):
+
+Equilibrium Lattice Constant (a_eq): 2.8326 Å
+Equilibrium Cell Volume (V0): 11.3641 Å³
+Bulk Modulus (B0): 193.02 GPa
+Equilibrium Energy (E0): -254.36791246 Ry
+Pressure Derivative (B0'): 7.612
+
+
+Note:
+An earlier analysis used an incorrect pressure conversion factor (Ry/Bohr³ -> GPa) even though the fitted volumes were expressed in Å³. The final value above uses the correct Ry/Å³ -> GPa conversion.
+More detail regarding the error and my progress can be found in the text file "Corrected EOS QE Calculation stuff.txt"
