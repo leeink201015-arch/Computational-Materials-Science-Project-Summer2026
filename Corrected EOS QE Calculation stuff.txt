@@ -71,6 +71,14 @@ Lowest sampled energy:
 a = 2.8373 Å
 E = -254.36799697 Ry
 
-Birch-Murnaghan fit:
-a_eq =
-B0 =
+Birch-Murnaghan fit (14x14x14):
+a_eq = 2.8326 Å
+V0 = 11.3641 Å³
+B0 = 193.0 GPa
+B0' = 7.612
+E0 = -254.36791246 Ry
+
+EOS fitting note:
+The initial bulk modulus (B0) was incorrectly reported as 1302.59 GPa as I accidentally used a Ry/Bohr³-to-GPa conversion factor while the fitted volume was expressed in Å³. Since the Birch-Murnaghan fit uses energies in Ry and volumes in Å³, B0 is obtained in Ry/Å³. By using the correct conversion (1 Ry/Å³ ≈ 2179.87 GPa), I was able to get a far more meaningful and reasonable result here: B0 ≈ 193.0 GPa.
+
+The equilibrium lattice constant and other fitted parameters were unaffected by this unit-conversion correction so that's good.
