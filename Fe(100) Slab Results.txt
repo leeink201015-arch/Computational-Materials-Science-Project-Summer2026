@@ -1,0 +1,145 @@
+We ran K-Points convergence on the 7-layer Fe(100) slab first, probably going to pick the 10x10x1 grid because the change in total energy from the 8x8x1 run to the 10x10x1 run is only around 0.71 meV/Fe, which is already small enough
+
+| k-grid  |    Energy (Ry) | ΔE from previous |         ΔE / Fe | Magnetization (μB/cell) |
+| ------- | -------------: | ---------------: | --------------: | ----------------------: |
+| 8×8×1   | −1780.39163882 |                — |               — |                   17.34 |
+| 10×10×1 | −1780.39127447 |         4.96 meV | **0.71 meV/Fe** |                   17.44 |
+| 12×12×1 | −1780.39114212 |         1.80 meV | **0.26 meV/Fe** |                   17.49 |
+| 14×14×1 | −1780.39087149 |         3.68 meV | **0.53 meV/Fe** |                   17.50 |
+
+
+
+Fe(100) SURFACE K-POINT CONVERGENCE
+
+Fixed 7-layer unrelaxed Fe(100) slab:
+
+8×8×1:
+E = -1780.39163882 Ry
+M = 17.34 μB/cell
+
+10×10×1:
+E = -1780.39127447 Ry
+M = 17.44 μB/cell
+ΔE(8→10) ≈ 4.96 meV/slab ≈ 0.71 meV/Fe
+
+12×12×1:
+E = -1780.39114212 Ry
+M = 17.49 μB/cell
+ΔE(10→12) ≈ 1.80 meV/slab ≈ 0.26 meV/Fe
+
+14×14×1:
+E = -1780.39087149 Ry
+M = 17.50 μB/cell
+ΔE(12→14) ≈ 3.68 meV/slab ≈ 0.53 meV/Fe
+
+So now, we can finally do the production clean Fe(100) relaxation using a = 2.8326 Å; ecutwfc = 65 Ry; ecutrho = 782 Ry; K-Points (10x10x1); 7 layers (z-symmetrical) Fe(100) slab; 15 Å vacuum
+
+
+
+These are the results from the QE calculation using (10x10x1): (raw QE results)
+
+1836:     convergence has been achieved in  15 iterations
+1850:     Total force =     0.016263     Total SCF correction =     0.000493
+2672:     convergence has been achieved in  18 iterations
+2686:     Total force =     0.007925     Total SCF correction =     0.000044
+3494:     convergence has been achieved in  17 iterations
+3508:     Total force =     0.002731     Total SCF correction =     0.000023
+4308:     convergence has been achieved in  16 iterations
+4322:     Total force =     0.002588     Total SCF correction =     0.000025
+5110:     convergence has been achieved in  15 iterations
+5124:     Total force =     0.002350     Total SCF correction =     0.000018
+5963:     convergence has been achieved in  19 iterations
+5977:     Total force =     0.001987     Total SCF correction =     0.000082
+6786:     convergence has been achieved in  17 iterations
+6800:     Total force =     0.001756     Total SCF correction =     0.000021
+7622:     convergence has been achieved in  18 iterations
+7636:     Total force =     0.001921     Total SCF correction =     0.000024
+8422:     convergence has been achieved in  15 iterations
+8436:     Total force =     0.001767     Total SCF correction =     0.000061
+8443:     End of BFGS Geometry Optimization
+8445:     Final energy   =   -1780.3922363330 Ry
+
+8448:Begin final coordinates
+
+Begin final coordinates
+
+ATOMIC_POSITIONS (crystal)
+Fe            0.0000000000        0.0000000000        0.3189370858
+Fe            0.5000000000        0.5000000000        0.3778786719
+Fe            0.0000000000        0.0000000000        0.4398482736
+Fe            0.5000000000        0.5000000000        0.5000000000    0   0   0
+Fe            0.0000000000        0.0000000000        0.5601517264
+Fe            0.5000000000        0.5000000000        0.6221213281
+Fe            0.0000000000        0.0000000000        0.6810629142
+End final coordinates
+
+
+
+     Writing output data file ./out/fe100_slab.save/
+
+
+
+Computational time:
+- CPU time: ~11 h 59 min
+- Wall time: ~12 h 9 min
+- Run locally in WSL using 1 MPI process
+
+
+
+***FINAL Fe(100) CLEAN-SURFACE RELAXATION***
+
+Calculation:
+- 7-layer symmetric Fe(100) slab
+- Equilibrium bulk lattice constant: a_eq = 2.8326 Å
+- Bulk Fe(100) interlayer spacing: a_eq/2 = 1.4163 Å
+- Vacuum thickness: ~15 Å
+- K-point mesh: 10×10×1
+- ecutwfc = 65 Ry
+- ecutrho = 782 Ry
+- Spin-polarized calculation
+- Marzari-Vanderbilt smearing, degauss = 0.02 Ry
+- BFGS ionic relaxation
+- Central (4th) Fe layer fixed; three layers on each side allowed to relax
+
+Final QE results:
+- BFGS geometry optimization completed
+- Final energy = -1780.3922363330 Ry
+- Final reported total force = 0.001767 Ry/Bohr
+- Final SCF correction = 0.000061
+- Calculation ended normally with JOB DONE.
+
+Final fractional z coordinates:
+Layer 1: 0.3189370858
+Layer 2: 0.3778786719
+Layer 3: 0.4398482736
+Layer 4: 0.5000000000 (fixed)
+Layer 5: 0.5601517264
+Layer 6: 0.6221213281
+Layer 7: 0.6810629142
+
+Cell height:
+c ≈ 23.4978 Å
+
+Relaxed interlayer spacings:
+d_12 = 1.384998 Å
+d_23 = 1.456149 Å
+d_34 = 1.413433 Å
+d_45 = 1.413433 Å
+d_56 = 1.456149 Å
+d_67 = 1.384998 Å
+
+Relative to bulk spacing d_bulk = 1.4163 Å:
+Δd_12 = -2.21 %
+Δd_23 = +2.81 %
+Δd_34 = -0.20 %
+
+The opposite surface gives the same values:
+Δd_67 = -2.21 %
+Δd_56 = +2.81 %
+Δd_45 = -0.20 %
+
+Therefore, moving inward from either Fe(100) surface, the relaxation pattern is:
+
+-2.21 %, +2.81 %, -0.20 %
+
+The final structure remained symmetric about the fixed central Fe layer.
