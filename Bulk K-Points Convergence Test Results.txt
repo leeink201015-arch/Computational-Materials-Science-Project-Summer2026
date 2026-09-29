@@ -1,0 +1,25 @@
+Results from the convergence test calculations done in Bulk K-Points Convergence test:
+I tried K grids (8, 8, 8); (10, 10, 10); (12, 12, 12), here are the results,
+
+scf_k_10x10x10.out:!    total energy              =    -254.36850080 Ry
+scf_k_12x12x12.out:!    total energy              =    -254.36811079 Ry
+scf_k_8x8x8.out:!       total energy              =    -254.36702927 Ry
+
+scf_k_10x10x10.out      total magnetization       =     2.11 Bohr mag/cell
+scf_k_12x12x12.out      total magnetization       =     2.20 Bohr mag/cell
+scf_k_8x8x8.out         total magnetization       =     2.15 Bohr mag/cell
+
+|ΔE_(8→10)| = ​0.00147153 Ry;
+|ΔE_(10→12)| = 0.00039001 Ry,
+
+also note that E_(8, 8, 8) ​> E_(12, 12, 12) ​> E_(10, 10, 10)​, this shows that the values are oscillating closer to a certain value
+
+This shows us that 8x8x8 is not sufficiently converged for the precision we want
+
+Now I'm going to keep on running the convergence test with K grids (14, 14, 14) and (16, 16, 16)
+
+Got scf_k_14x14x14.out:!    total energy              =    -254.36800680 Ry
+    scf_k_16x16x16.out:!    total energy              =    -254.36796161 Ry
+
+scf_k_14x14x14.out      total magnetization       =     2.15 Bohr mag/cell
+scf_k_16x16x16.out      total magnetization       =     2.16 Bohr mag/cell
