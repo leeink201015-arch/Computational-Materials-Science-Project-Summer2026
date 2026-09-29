@@ -9,8 +9,8 @@ scf_k_10x10x10.out      total magnetization       =     2.11 Bohr mag/cell
 scf_k_12x12x12.out      total magnetization       =     2.20 Bohr mag/cell
 scf_k_8x8x8.out         total magnetization       =     2.15 Bohr mag/cell
 
-|ΔE_(8→10)| = ​0.00147153 Ry;
-|ΔE_(10→12)| = 0.00039001 Ry,
+|ΔE_(8→10)| = ​0.00147153 Ry (= 20.02 meV);
+|ΔE_(10→12)| = 0.00039001 Ry (= 5.31 meV),
 
 also note that E_(8, 8, 8) ​> E_(12, 12, 12) ​> E_(10, 10, 10)​, this shows that the values are oscillating closer to a certain value
 
@@ -23,3 +23,12 @@ Got scf_k_14x14x14.out:!    total energy              =    -254.36800680 Ry
 
 scf_k_14x14x14.out      total magnetization       =     2.15 Bohr mag/cell
 scf_k_16x16x16.out      total magnetization       =     2.16 Bohr mag/cell
+
+|ΔE_(12→14)| = ​0.00147153 Ry (= 1.41 meV);
+|ΔE_(14→16)| = 0.00039001 Ry (= 0.61 meV),
+
+here, the total energy converged, and note that |E_(8, 8, 8) ​− E_(16, 16, 16)​∣ ≈ 0.0009323 Ry (= 12.7 meV/atom), which is not negligible for the caluclation of Bulk Modulus
+
+This proves the hypothesis, that the original (8x8x8) mesh had not reached the level of K-Point convergence needed for a high-precision EOS fit!
+
+So now, we can use the 14 x 14 x 14 grid for our next EOS. Reason why 14^3 is better than 16^3 is because at 14 x 14 x 14, we're already around the ~1 meV/atom level relative to the next denser test. That's a reasonable accuracy/cost compromise for our calculation
