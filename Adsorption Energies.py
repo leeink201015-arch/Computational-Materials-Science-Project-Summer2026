@@ -107,28 +107,35 @@ def molecule_generated (centre, ligands, geometry, bond_length, bond_angle=None,
 tilt_angles = np.array([0, 30, 60, 90, 120, 150, 180])
 azimuth_angles = np.array([0, 60, 120, 180, 240, 300])
 
-bcc_lattice = mg.Lattice.cubic(2.87) # Uppercase Lattice, because it's an object?
+a = 2.8326
+c = a*8.2958
 
-species_pure = ["Fe", "Fe"]
+lattice = mg.Lattice.tetragonal(2*a,c)
 
-bcc_coordinates =([
-    [0.00, 0.00, 0.00], 
-    [0.50, 0.50, 0.50]
-])
+relaxed_layers = [
+    (0.0000000000, 0.0000000000, 0.3189370858),
+    (0.5000000000, 0.5000000000, 0.3778786719),
+    (0.0000000000, 0.0000000000, 0.4398482736),
+    (0.5000000000, 0.5000000000, 0.5000000000),
+    (0.0000000000, 0.0000000000, 0.5601517264),
+    (0.5000000000, 0.5000000000, 0.6221213281),
+    (0.0000000000, 0.0000000000, 0.6810629142),
+]
 
-bulk_iron = mg.Structure(bcc_lattice, species_pure, bcc_coordinates)
+positions_2x2 = []
 
-# Generating a slab from bulky iron so that we can create a surface for catalysing reactions
+for x, y, z in relaxed_layers:
+    for i in range(2):
+        for j in range(2):
+            positions_2x2.append([(x+i)/2, (y+j)/2, z])
 
-slab_gen = SlabGenerator(
-    initial_structure = bulk_iron,
-    miller_index      = (1, 0, 0),
-    min_slab_size     = 10.0,
-    min_vacuum_size   = 10.0
-)
+fe_surface = mg.Structure(lattice, ["Fe"]*len(positions_2x2), positions_2x2)
+print("# of Fe atoms:", len(fe_surface))
+print("Lattice parameters:", fe_surface.lattice.abc)
+assert len(fe_surface) == 28
+# Ima run it but only to test the new slab geometry after modifications...
+# raise SystemExit("Geometry check complete")
 
-slabs = slab_gen.get_slabs()
-fe_surface = slabs[0]
 print(f"Number of atoms in surface slab: {len(fe_surface)}")
 
 # Generate the structure and find the number of atoms
@@ -140,7 +147,7 @@ print(f"File saved in {os.getcwd()}")
 # Just created a slab surface, now let AdsobateSiteFinder deal with the cases with different adsorption positions
 
 adsorption_finder = AdsorbateSiteFinder(fe_surface)
-adsorption_sites = adsorption_finder.find_adsorption_sites()
+adsorption_sites = adsorption_finder.find_adsorption_sites(positions=["ontop", "bridge", "hollow"], symm_reduce=False)
 
 for site_type, adsorbing_positions in adsorption_sites.items():
 
@@ -148,27 +155,6 @@ for site_type, adsorbing_positions in adsorption_sites.items():
 
     for position in adsorbing_positions:
         print(position)
-
-ontop_sites = adsorption_finder.find_adsorption_sites(
-    positions = ["ontop"]
-)
-
-bridge_sites = adsorption_finder.find_adsorption_sites(
-    positions = ["bridge"]
-)
-
-hollow_sites = adsorption_finder.find_adsorption_sites(
-    positions = ["hollow"]
-)
-
-# Trying to find the uppermost iron atom that's going to react with CO first, then we arrange them in order
-
-# print(fe_surface) First getting a better visual of our surface atoms
-# rearranged_sites = sorted(fe_surface, key = lambda site: site.coords[2], reverse = True)
-
-# print(rearranged_sites)
-
-# Reacting gas molecules generalization
 
 reacting_molecules = {
     "CO": {"centre": "C", "ligands": ["O"], "geometry": "linear_diatomic", "bond_length": [1.128], "floating_distance": 2.0},
@@ -189,8 +175,6 @@ reacting_molecules = {
     "NH3": {"centre": "N", "ligands": ["H", "H", "H"], "geometry": "trigonal_pyramidal", "bond_length": [1.012, 1.012, 1.012], "lp_centre_ligand_angle": 112.0, "floating_distance": 2.0}
 }
 
-# Creating the atomic_species block
-
 involved_elements_informations = {
     "Fe": {"mass": 55.845, "pseudopotential": "Fe.pbe-spn-rrkjus_psl.0.2.1.UPF"},
     "C":  {"mass": 12.011, "pseudopotential": "C.pbe-n-kjpaw_psl.1.0.0.UPF"},
@@ -200,9 +184,7 @@ involved_elements_informations = {
     "S":  {"mass": 32.059, "pseudopotential": "S.pbe-n-kjpaw_psl.1.0.0.UPF"}
 }
 
-# Converting to a "readable" format (readable by QEspresso)
-
-def write_qespresso_input (structure, molecular_name, output_file):
+def write_qespresso_input (structure, molecular_name, output_file, calculation = "relax"):
     element_present = structure.composition.elements
     num_atoms = len(structure)
     num_species = len(element_present)
@@ -210,10 +192,10 @@ def write_qespresso_input (structure, molecular_name, output_file):
     with open(output_file, "w") as file:
         # Control Block
         file.write("&CONTROL\n")
-        file.write("calculation = 'relax'\n")
+        file.write(f"calculation = '{calculation}'\n")
         file.write("restart_mode = 'from_scratch'\n")
         file.write(f"prefix = 'fe_{molecular_name}'\n")
-        file.write("pseudo_dir = '/usr/share/espresso/pseudo/'\n")  # Made a change here, because pseudopotentials are actually installed in /usr/share/espresso/pseudo/
+        file.write("pseudo_dir = '/usr/share/espresso/pseudo/'\n") # Made a change here, because pseudopotentials are actually installed in /usr/share/espresso/pseudo/
         file.write("outdir = './tmp/'\n")
         file.write("/\n\n")
 
@@ -223,8 +205,10 @@ def write_qespresso_input (structure, molecular_name, output_file):
         file.write(f"nat = {num_atoms}\n")
         file.write(f"ntyp = {num_species}\n")
         file.write("nosym = .true.\n")  # Added this line to disable symmetry operations, which is important for surface calculations
-        file.write("ecutwfc = 45.0\n")
-        file.write("ecutrho = 360.0\n")
+        file.write("ecutwfc = 65.0\n")
+        file.write("ecutrho = 782.0\n")
+        file.write("nspin = 2\n")  # Change, added spin-polarized calculation for Fe
+        file.write("starting_magnetization(1) = 0.5\n")  # Initial magnetic moment for Fe. Added these two lines I didn't have them before lol
         file.write("occupations = 'smearing'\n")
         file.write("smearing = 'mv'\n")
         file.write("degauss = 0.02\n")
@@ -233,13 +217,14 @@ def write_qespresso_input (structure, molecular_name, output_file):
         # Electrons Block
         file.write("&ELECTRONS\n")
         file.write("conv_thr = 1.0d-8\n")
-        file.write("mixing_beta = 0.7\n")
+        file.write("mixing_beta = 0.3\n")  # Changed from 0.7 to 0.3 so that the updates for electron density are more conservation. Important because the complex Fe+CO system can make convergence challenging
         file.write("/\n\n")
 
-        # Ions Block (for relaxation)
-        file.write("&IONS\n")
-        file.write("ion_dynamics = 'bfgs'\n")
-        file.write("/\n\n")
+        # Ions Block (for relaxation, so block is skippable if calculation is not "relax")
+        if calculation == "relax":
+            file.write("&IONS\n")
+            file.write("ion_dynamics = 'bfgs'\n")
+            file.write("/\n\n")
 
         # Atomic Species
         file.write("ATOMIC_SPECIES\n")
@@ -257,28 +242,103 @@ def write_qespresso_input (structure, molecular_name, output_file):
 
         # Atomic Positions (modified, added mobility to the top layer Fe atoms)
         file.write("ATOMIC_POSITIONS angstrom\n")
+
+        fe_sites = [
+            site for site in structure.sites
+            if site.species_string == "Fe"
+        ]
+
+        if fe_sites:
+            top_fe_z_coord = max(
+                [s.coords[2] for s in fe_sites]
+            )
+
+        tolerance = 0.1  # Define a small tolerance for floating-point comparison
+
         for site in structure.sites:
-            top_fe_z_coord = max([s.coords[2] for s in structure if s.species_string == "Fe"])
-            tolerance = 0.1  # Define a small tolerance for floating-point comparison
+            if site.species_string != "Fe":
+                flags = "1 1 1"  # Basically the adsorbates
 
-            for site in structure.sites:
-                if site.species_string != "Fe":
-                    flags = "1 1 1"  # Basically the adsorbates
+            elif abs(site.coords[2] - top_fe_z_coord) < tolerance:
+                flags = "1 1 1"  # Top layer Fe atoms (giving mobility)
 
-                elif abs(site.coords[2] - top_fe_z_coord) < tolerance:
-                    flags = "1 1 1"  # Top layer Fe atoms (giving mobility)
+            else:
+                flags = "0 0 0"  # Lower layers of Fe atoms (fixed, no relaxation)
 
-                else:
-                    flags = "0 0 0"  # Lower layers of Fe atoms (fixed, no relaxation)
-
-            file.write(f"{site.species_string:2s}  {site.coords[0]:12.6f} {site.coords[1]:12.6f} {site.coords[2]:12.6f}\n")
+            file.write(f"{site.species_string:2s}  {site.coords[0]:12.6f} {site.coords[1]:12.6f} {site.coords[2]:12.6f} {flags}\n")
         file.write("\n")
 
         # K-Points
         file.write("K_POINTS automatic\n")
-        file.write("3 3 1 0 0 0\n")
+        file.write("5 5 1 0 0 0\n")  # Changed from 3x3x1 to 5x5x1 because we used 5x5x1 for the clean Fe(100) surface calculations so it's important to keep that consistency. 5x5x1 and 4x4x1 have differen Brillouin-zone sampling errors
 
     print(f"Quantum ESPRESSO input file: {output_file}")
+
+# Test one CO moleucle on an ontop site
+co_data = reacting_molecules["CO"]
+
+symbols, molecule_coordinates = molecule_generated(
+    centre=co_data["centre"],
+    ligands=co_data["ligands"],
+    geometry=co_data["geometry"],
+    bond_length=[1.1411]
+)
+
+ontop_site = adsorption_sites["ontop"][0].copy()
+
+top_fe_z = max(site.coords[2] for site in fe_surface)
+ontop_site[2] = top_fe_z + 2.0
+
+co_coordinates = molecule_coordinates @ R.from_euler(
+    "y", -90, degrees=True
+).as_matrix().T
+
+fe_co_system = fe_surface.copy()
+
+for element, coords in zip(symbols, co_coordinates):
+    fe_co_system.append(element, coords + ontop_site, coords_are_cartesian=True)
+
+print("Fe + CO atoms: ", len(fe_co_system))
+print("Carbon: ", fe_co_system[-2].coords)
+print("Oxygen: ", fe_co_system[-1].coords)
+
+fe_co_system.to(fmt="cif", filename="fe100_2x2_co_ontop.cif")
+
+write_qespresso_input(
+    structure=fe_co_system,
+    molecular_name="CO_ontop",
+    output_file="fe100_2x2_co_ontop.in",
+    calculation="relax"
+)
+
+raise SystemExit("Fe + CO geometry and QE input generated.")
+
+print("Top Fe z:", max(site.coords[2] for site in fe_surface))
+print("C-Fe vertical distance:", fe_co_system[-2].coords[2] - max(site.coords[2] for site in fe_surface))
+print("C-O distance:", fe_co_system.get_distance(28, 29))
+
+ontop_sites = adsorption_finder.find_adsorption_sites(
+    positions = ["ontop"]
+)
+
+bridge_sites = adsorption_finder.find_adsorption_sites(
+    positions = ["bridge"]
+)
+
+hollow_sites = adsorption_finder.find_adsorption_sites(
+    positions = ["hollow"]
+)
+
+# Trying to find the uppermost iron atom that's going to react with CO first, then we arrange them in order
+
+# print(fe_surface) First getting a better visual of our surface atoms
+# rearranged_sites = sorted(fe_surface, key = lambda site: site.coords[2], reverse = True)
+
+# print(rearranged_sites)
+
+# Converting to a "readable" format (readable by QEspresso)
+
+# Deleted the first write_qespresso_input function because it was redundant and not used in the code. The second write_qespresso_input function is the one that will be used to generate the input files for QE calculations.
 
 def write_slurm_script(molecular_name, output_file):
     with open(output_file, "w") as file:
@@ -368,111 +428,5 @@ for reacting_molecule, molecular_data in reacting_molecules.items():
 
                     print(f"File saved in {os.getcwd()}")
 
-def write_qespresso_input (structure, molecular_name, output_file, calculation = "relax"):
-    element_present = structure.composition.elements
-    num_atoms = len(structure)
-    num_species = len(element_present)
-
-    with open(output_file, "w") as file:
-        # Control Block
-        file.write("&CONTROL\n")
-        file.write(f"calculation = '{calculation}'\n")
-        file.write("restart_mode = 'from_scratch'\n")
-        file.write(f"prefix = 'fe_{molecular_name}'\n")
-        file.write("pseudo_dir = '/usr/share/espresso/pseudo/'\n") # Made a change here, because pseudopotentials are actually installed in /usr/share/espresso/pseudo/
-        file.write("outdir = './tmp/'\n")
-        file.write("/\n\n")
-
-        # System Block
-        file.write("&SYSTEM\n")
-        file.write("ibrav = 0\n")
-        file.write(f"nat = {num_atoms}\n")
-        file.write(f"ntyp = {num_species}\n")
-        file.write("nosym = .true.\n")  # Added this line to disable symmetry operations, which is important for surface calculations
-        file.write("ecutwfc = 45.0\n")
-        file.write("ecutrho = 360.0\n")
-        file.write("occupations = 'smearing'\n")
-        file.write("smearing = 'mv'\n")
-        file.write("degauss = 0.02\n")
-        file.write("/\n\n")
-
-        # Electrons Block
-        file.write("&ELECTRONS\n")
-        file.write("conv_thr = 1.0d-8\n")
-        file.write("mixing_beta = 0.7\n")
-        file.write("/\n\n")
-
-        # Ions Block (for relaxation, so block is skippable if calculation is not "relax")
-        if calculation == "relax":
-            file.write("&IONS\n")
-            file.write("ion_dynamics = 'bfgs'\n")
-            file.write("/\n\n")
-
-        # Atomic Species
-        file.write("ATOMIC_SPECIES\n")
-        for elem in element_present:
-            sym = elem.symbol
-            data = involved_elements_informations[sym]
-            file.write(f"{sym:2s}  {data['mass']:7.3f}  {data['pseudopotential']}\n")
-        file.write("\n")
-
-        # Cell Parameters
-        file.write("CELL_PARAMETERS angstrom\n")
-        for vec in structure.lattice.matrix:
-            file.write(f"{vec[0]:12.6f} {vec[1]:12.6f} {vec[2]:12.6f}\n")
-        file.write("\n")
-
-        # Atomic Positions (modified, added mobility to the top layer Fe atoms)
-        file.write("ATOMIC_POSITIONS angstrom\n")
-
-        fe_sites = [
-            site for site in structure.sites
-            if site.species_string == "Fe"
-        ]
-
-        if fe_sites:
-            top_fe_z_coord = max(
-                [s.coords[2] for s in fe_sites]
-            )
-
-        tolerance = 0.1  # Define a small tolerance for floating-point comparison
-
-        for site in structure.sites:
-            if site.species_string != "Fe":
-                flags = "1 1 1"  # Basically the adsorbates
-
-            elif abs(site.coords[2] - top_fe_z_coord) < tolerance:
-                flags = "1 1 1"  # Top layer Fe atoms (giving mobility)
-
-            else:
-                flags = "0 0 0"  # Lower layers of Fe atoms (fixed, no relaxation)
-
-            file.write(f"{site.species_string:2s}  {site.coords[0]:12.6f} {site.coords[1]:12.6f} {site.coords[2]:12.6f} {flags}\n")
-        file.write("\n")
-
-        # K-Points
-        file.write("K_POINTS automatic\n")
-        file.write("4 4 1 0 0 0\n")  # Changed from 3x3x1 to 4x4x1 for better accuracy as it gives denser k-point sampling
-
-    print(f"Quantum ESPRESSO input file: {output_file}")
-
-# Now we are trying to generate a relaxation input file for the clean Fe(100) surface
-clean_surface_folder = os.path.join("calculations", "references", "clean_fe_surface")
-os.makedirs(clean_surface_folder, exist_ok=True)
-
-clean_surface_relaxation_input_path = os.path.join(clean_surface_folder, "relax.in")
-
-print("Generating clean surface relax.in now...")
-print("Target path:", os.path.abspath(clean_surface_relaxation_input_path))
-
-write_qespresso_input(
-    structure=fe_surface,
-    molecular_name="clean_fe_surface",
-    output_file=clean_surface_relaxation_input_path,
-    calculation="relax"
-)
-
-print("Finished write_qespresso_input")
-print("File exists:", os.path.exists(clean_surface_relaxation_input_path))
-
-print(f"File saved in {os.getcwd()}")
+# Deleted that entire section at the bottom becasue they were written to generate a clean Fe(100) realaxation input
+# I'm not doing that rn, I don't need it
