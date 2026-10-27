@@ -28,7 +28,7 @@ Analysis
 
 The isolated CO molecule was successfully relaxed using PBE-based DFT. Its final bond length (1.14110 Å) is close to the experimental value of ~1.128 Å.
 
-I'll be using this calculated E_CO value to calculate adsorption energies using the simple formula:    E_ads = E_(Fe+CO) − E_Fe − E_CO
+I'll be using this calculated E_CO value to calculate adsorption energies using the simple formula (once I make sure that the computational settings are consistent): E_ads = E_(Fe+CO) − E_Fe − E_CO
 
 ***Note that a negative adsorption energy indicates that the adsorbed system is energetically favorable relative to the chosen clean-surface and isolated-molecule references.
 
