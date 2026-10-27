@@ -1,0 +1,45 @@
+This text file shows the results from the BFGS isolated CO calculations
+
+Isolated CO — DFT Geometry Relaxation
+Calculation: relax
+Exchange-correlation functional: PBE
+Pseudopotentials: C.pbe-n-kjpaw_psl.0.1.UPF, O.pbe-kjpaw.UPF
+Simulation cell: 15 × 15 × 15 Å³
+K-point sampling: Gamma only
+Wavefunction cutoff: 65 Ry
+Charge-density cutoff: 782 Ry
+Occupations: Fixed
+Spin: Non-spin-polarized (nspin = 1)
+Ionic optimization: BFGS
+SCF convergence threshold: 1.0 × 10⁻⁸ Ry
+
+Results
+
+!!! Final total energy: −59.9853036116 Ry !!!
+
+Initial C–O bond length: 1.128 Å
+Relaxed C–O bond length: 1.14110 Å
+
+SCF cycles: 4
+BFGS steps: 2
+Wall time: 3 h 11 min, electronic and geometry convergence are both achieved
+
+Analysis
+
+The isolated CO molecule was successfully relaxed using PBE-based DFT. Its final bond length (1.14110 Å) is close to the experimental value of ~1.128 Å.
+
+I'll be using this calculated E_CO value to calculate adsorption energies using the simple formula:    E_ads = E_(Fe+CO) − E_Fe − E_CO
+
+***Note that a negative adsorption energy indicates that the adsorbed system is energetically favorable relative to the chosen clean-surface and isolated-molecule references.
+
+
+
+Limitations
+
+I used a 15 Å vacuum box with periodic boundary conditions to simulate an isolated CO molecule.
+
+The numerical convergence with respect to cell size and cutoffs hasn't been independently verified for isolated CO yet.
+
+Status: Completed — isolated CO reference energy (E_CO) value found:
+
+                                    E_CO = −59.9853036116 Ry
