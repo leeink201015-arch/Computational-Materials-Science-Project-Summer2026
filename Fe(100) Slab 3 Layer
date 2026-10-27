@@ -1,0 +1,47 @@
+Things changed from 2x2x7 to 2x2x3:
+1. From 2x2x7 = 28 to 2x2x3 = 12
+2. Remove top2 and bottom2 layers, only keep middle 3 layers
+3. Change calculation from SCF to relaxed. The original 2x2x7 model used coordinates from the initially relaxed OG 1x1x7 model, now since we changed the number of layers, the remaining 3 layers change physical environment
+4. So now I needed to add the IONS block as well
+5. K-POINTS from 5 5 1 0 0 0 to 2 2 1 0 0 0 to reduce computation time
+
+
+
+Fe(100) 2x2x3 Slab relaxation results
+
+Date: Oct 13, 2026;  Calculation type: relax (BFGS)
+
+Middle layer fixed, outer layers relaxed
+Spin polarization nspin = 2
+
+Pseudopotential: Fe.pbe-spn-rrkjus_psl.0.2.1.UPF
+
+Cutoffs: (ecutwfc, ecutrho) = (65 Ry, 782 Ry)
+K-Points mesh: 2x2x1
+SCF threshold: 1.0E-8
+Force threshold: 1.0E-3 Ry/Bohr
+
+Result: BFGS converged, 4 BFGS steps, 5 SCF cycles; Wall time: 6h15min
+
+Final energy: -3051.6793832062 Ry
+Final total force: 0.001088 Ry/Bohr
+
+Status: relaxation successful
+
+Limitations: 3-layered slab and coarse k-point mesh, further convergence testing needed
+
+Final coordinates:
+ATOMIC_POSITIONS (crystal)
+Fe            0.0000000000        0.0000000000        0.4401518937
+Fe            0.0000000000        0.5000000000        0.4401600566
+Fe            0.5000000000        0.0000000000        0.4401600566
+Fe            0.5000000000        0.5000000000        0.4401514763
+Fe            0.2500000000        0.2500000000        0.5000000000    0   0   0
+Fe            0.2500000000        0.7500000000        0.5000000000    0   0   0
+Fe            0.7500000000        0.2500000000        0.5000000000    0   0   0
+Fe            0.7500000000        0.7500000000        0.5000000000    0   0   0
+Fe            0.0000000000        0.0000000000        0.5598481063
+Fe            0.0000000000        0.5000000000        0.5598399434
+Fe            0.5000000000        0.0000000000        0.5598399434
+Fe            0.5000000000        0.5000000000        0.5598485237
+End final coordinates
