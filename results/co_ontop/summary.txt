@@ -1,0 +1,32 @@
+CO adsorption on Fe(100) - ontop site
+Date: October 26, 2026
+
+Calculation: CO-only relaxation (Fe atoms fixed)
+Software: Quantum ESPRESSO
+Surface: Fe(100), 2x2x3 slab (12 Fe atoms)
+Adsorbate: CO
+
+Settings:
+ecutwfc = 40 Ry
+ecutrho = 480 Ry
+k-points = Gamma only
+conv_thr = 1e-6
+forc_conv_thr = 1e-3 Ry/Bohr
+
+Results:
+Geometry optimization: CONVERGED
+BFGS steps: 6
+Final total force: 0.000059 Ry/Bohr
+Final total energy: -3110.5391425730 Ry
+Runtime: 8966.47 seconds (about 2h 29m)
+
+Final geometry:
+Fe-C distance: approximately 1.89 Angstrom
+C-O bond length: approximately 1.17 Angstrom
+
+Limitations:
+Preliminary screening calculation.
+Fe atoms were fixed during CO relaxation.
+Cutoffs and k-point sampling have not been convergence-tested.
+Adsorption energy has not yet been calculated.
+Bridge and hollow sites have not yet been compared.

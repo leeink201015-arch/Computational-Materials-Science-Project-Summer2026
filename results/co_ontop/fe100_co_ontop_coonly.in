@@ -1,0 +1,56 @@
+&CONTROL
+  calculation = 'relax'
+  restart_mode = 'from_scratch'
+  prefix = 'fe100_co_ontop_coonly'
+  pseudo_dir = '/usr/share/espresso/pseudo/'
+  outdir = './out_co_ontop_coonly/'
+  nstep = 8
+  forc_conv_thr = 1.0D-3
+/
+&SYSTEM
+  ibrav = 6
+  celldm(1) = 10.70756
+  celldm(3) = 4.1479
+  nat = 14
+  ntyp = 3
+
+  ecutwfc = 40.0
+  ecutrho = 480.0
+
+  occupations = 'smearing'
+  smearing = 'marzari-vanderbilt'
+  degauss = 0.02
+
+  nspin = 2
+  starting_magnetization(1) = 0.5
+/
+&ELECTRONS
+  conv_thr = 1.0D-6
+  mixing_beta = 0.3
+/
+&IONS
+  ion_dynamics = 'bfgs'
+/
+ATOMIC_SPECIES
+Fe 55.845 Fe.pbe-spn-rrkjus_psl.0.2.1.UPF
+C  12.011 C.pbe-n-kjpaw_psl.0.1.UPF
+O  15.999 O.pbe-kjpaw.UPF
+
+ATOMIC_POSITIONS (crystal)
+Fe 0.0000000000 0.0000000000 0.4401518937 0 0 0
+Fe 0.0000000000 0.5000000000 0.4401600566 0 0 0
+Fe 0.5000000000 0.0000000000 0.4401600566 0 0 0
+Fe 0.5000000000 0.5000000000 0.4401514763 0 0 0
+Fe 0.2500000000 0.2500000000 0.5000000000 0 0 0
+Fe 0.2500000000 0.7500000000 0.5000000000 0 0 0
+Fe 0.7500000000 0.2500000000 0.5000000000 0 0 0
+Fe 0.7500000000 0.7500000000 0.5000000000 0 0 0
+Fe 0.0000000000 0.0000000000 0.5598481063 0 0 0
+Fe 0.0000000000 0.5000000000 0.5598399434 0 0 0
+Fe 0.5000000000 0.0000000000 0.5598399434 0 0 0
+Fe 0.5000000000 0.5000000000 0.5598485237 0 0 0
+C  0.0000000000 0.0000000000 0.6410854031 1 1 1
+O  0.0000000000 0.0000000000 0.6909631429 1 1 1
+
+K_POINTS automatic
+1 1 1 0 0 0
