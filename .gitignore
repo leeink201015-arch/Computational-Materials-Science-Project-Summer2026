@@ -1,0 +1,15 @@
+# Quantum ESPRESSO temporary files
+*.save/
+wfc*.dat
+*.wfc*
+*.igk*
+
+# QE scratch directories
+tmp/
+out/
+out_*/
+mpi_test/
+
+# Python cache
+__pycache__/
+*.pyc
